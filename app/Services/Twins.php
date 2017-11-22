@@ -72,47 +72,4 @@ class Twins
 
         return $noticeTitles;
     }
-
-    /* 成績を取得 */
-    function getAchivements()
-    {
-        // exec_keyを取得する
-        $form_params = [
-            '_flowId' => 'SIW0001200-flow'
-        ];
-
-        $res = $this->client->post('campussquare.do', ['form_params' => $form_params, 'allow_redirects' => false]);
-        $url = $res->getHeader('location')[0];
-        $this->exec_key = explode('=', parse_url($url)['query'])[1];
-
-        // 掲示を取得する
-        $query = [
-            "_flowExecutionKey"	=> $this->exec_key,
-            "_eventId" => "output",
-            "nendo"	=> "2017",
-            "gakkiKbnCd" =>	"A",
-            "spanType" => "0",
-            "_displayCount"	=> "10"
-        ];
-
-        $res = $this->client->get('campussquare.do', ['query' => $query, 'allow_redirects' => false]);
-        $url = $res->getHeader('location')[0];
-        $res = $this->client->get($url, ['allow_redirects' => false]);
-
-        $query = [
-            "_flowExecutionKey"	=> $this->exec_key,
-            "_eventId" => "output",
-            "logicalDeleteFlg" => "0",
-            "outputType" => "csv",
-            "fileEncoding" => "UTF8"
-        ];
-
-        $res = $this->client->post('campussquare.do', ['form_params' => $form_params, 'allow_redirects' => false]);
-        $url = $res->getHeader('location')[0];
-        $this->exec_key = explode('=', parse_url($url)['query'])[1];
-
-        // HTMLをパース
-
-        return $archivements;
-    }
 }
